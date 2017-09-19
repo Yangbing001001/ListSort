@@ -1,0 +1,101 @@
+package com.yb;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
+
+public class Main {
+	public static void main(String[] args){
+		Comparator<Student> comparator = new Comparator<Student>() {
+            public int compare(Student s1, Student s2) {          	
+                // 先按等级水平进行排序
+            	if(s1.getLever()!=s2.getLever()){
+            		return s1.getLever() - s2.getLever();          		
+            	}
+            	//在按德分和才分的总分降序排列
+                if ((s1.getAblityScore()+s1.getQualityScore())!=(s2.getAblityScore()+s2.getQualityScore())) {
+                    return s2.getAblityScore()+s2.getQualityScore()- s1.getAblityScore()-s1.getQualityScore();
+                } else if (s1.getQualityScore()!=s2.getQualityScore()) {
+                    // 再按德分降序排列
+                    return  s2.getQualityScore()-s1.getQualityScore();
+                } else {
+                    // 姓名也相同则按学号升序排列
+                    return s1.getNum() - s2.getNum();
+                }
+            }
+        };
+		Scanner sc= new Scanner(System.in);
+		int index = sc.nextInt();
+		int Lowscore = sc.nextInt();
+		int Highscore = sc.nextInt();
+		List<Student> studentList = new ArrayList<Student>();
+		for(int i=0;i<index;i++){
+			int num = sc.nextInt();
+			int qualityscoretmp = sc.nextInt();
+			int ablityscoretmp = sc.nextInt();
+			if(num>99999999||num<10000000||qualityscoretmp>100||qualityscoretmp<0||ablityscoretmp>100||ablityscoretmp<0){				
+				System.exit(0);				
+			}
+			if(qualityscoretmp>=Highscore&&ablityscoretmp>=Highscore){
+				studentList.add(new Student(num,qualityscoretmp,ablityscoretmp,1));				
+			}
+		    if(qualityscoretmp>=Highscore&&ablityscoretmp>=Lowscore&&ablityscoretmp<Highscore){
+		    	studentList.add(new Student(num,qualityscoretmp,ablityscoretmp,2));	
+			}
+			if(qualityscoretmp<Highscore&&qualityscoretmp>=Lowscore&&ablityscoretmp>=Lowscore&&qualityscoretmp>=ablityscoretmp){
+				studentList.add(new Student(num,qualityscoretmp,ablityscoretmp,3));	
+			}
+			if(qualityscoretmp<Highscore&&qualityscoretmp>=Lowscore&&ablityscoretmp>=Lowscore&&qualityscoretmp<ablityscoretmp){
+				studentList.add(new Student(num,qualityscoretmp,ablityscoretmp,4));				
+			}								
+		}
+		System.out.println(studentList.size());
+		Collections.sort(studentList,comparator);		
+		for(int i=0;i<studentList.size();i++){
+			System.out.println(""+studentList.get(i).num+" "+studentList.get(i).qualityScore+" "+studentList.get(i).ablityScore);
+		}		
+	}
+}
+
+ class Student{	
+	int num;
+	int qualityScore;
+	int ablityScore;
+    int	lever;
+	public Student(int num,int qualityScore,int ablityScore,int lever){
+		
+	
+		this.num = num;
+		this.qualityScore = qualityScore;
+		this.ablityScore = ablityScore;
+		this.lever = lever;
+	}
+
+	public int getNum() {
+		return num;
+	}
+	public void setNum(int num) {
+		this.num = num;
+	}
+	public int getQualityScore() {
+		return qualityScore;
+	}
+	public void setQualityScore(int qualityScore) {
+		this.qualityScore = qualityScore;
+	}
+	public int getAblityScore() {
+		return ablityScore;
+	}
+	public void setAblityScore(int ablityScore) {
+		this.ablityScore = ablityScore;
+	}
+	public int getLever() {
+		return lever;
+	}
+	public void setLever(int lever) {
+		this.lever = lever;
+	}
+		
+}
